@@ -1,23 +1,55 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { useRef, useState } from "react";
 
 function App() {
+  const [todoList, modifyList] = useState([]);
+
+  const inputRef = useRef();
+
+  const addClick = () => {
+    const task = inputRef.current.value;
+    const item = { complete: false, task };
+    modifyList([...todoList, item]);
+  };
+
+  const taskClick = (index) => {
+    const tempList = [...todoList]
+    tempList[index].complete = !tempList[index].complete
+    modifyList(tempList)
+  };
+
+  const deleteTask = (index) => {
+    const tempList = [...todoList]
+    tempList.splice(index, 1)
+    modifyList(tempList)
+  };
+
+  console.log(todoList);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h2>To Do List</h2>
+      <div className = "todoListBox">
+        <ul>
+          {todoList.map((item, index) => {
+            return (
+              <div className = "item">
+                <li
+                  className={item.complete ? "done" : ""}
+                  key={index}
+                  onClick={() => taskClick(index)}
+                >
+                  {item.task}
+                </li>
+                <span onClick={() => deleteTask(index)}>X</span>
+              </div>
+            );
+          })}
+        </ul>
+      </div>
+      <div className = "inputAdd">
+        <input ref={inputRef} Placeholder="Enter a task...."></input>
+        <button onClick={addClick}>Add</button>
+      </div>
     </div>
   );
 }
